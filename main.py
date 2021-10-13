@@ -66,6 +66,29 @@ class Bot:
             user = self.get_user_from_prefix(prefix)
             parts = parts[1:]
 
+      text_start = next(
+        (idx for idx, part in enumerate(parts) if parts.startswith(':')),
+        None
+      )
+      if text_start is not None:
+          text_parts = parts[text_start:]
+          text_parts[0] = text_parts[0][1:]
+          text = ' '.join(text_parts)
+          text_command = text_parts[0]
+          text_args = text_parts[1:]
+          parts = parts[:text]
+
+
+      irc_command = parts[0] #PRIVMSG
+      irc_args = parts[1:] #channel
+
+      hash_start = next(
+        (idx for idx, part in enumerate(irc_args) if parts.startswith('#')),
+        None
+      )
+      if hash_start is not None:
+          channel = irc_args[hash_start][1:]
+      
             message = Message(
                 prefix=prefix,
                 user=user,
