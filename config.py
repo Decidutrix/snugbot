@@ -1,1 +1,1 @@
-TWITCH_TOKEN = 'oauth:2epwf59dufe8m2z8lzotrxvede5rz2'
+TWITCH_TOKEN = 'twitchtokenoauthgoeshere'
