@@ -1,9 +1,15 @@
 import socket
-
-
 import config
+from collections import namedtuple
 
-
+Message = namedtuple(
+    'Message',
+    'prefix user channel irc_command irc_args text text_command text_args',
+)
+# example of what this stands for
+# text
+    #text_commands !welcome
+    #text_args @user
 
 # the bot identifying itself
 
@@ -34,8 +40,46 @@ class Bot:
       self.send_privmsg(channel, 'I AM HERE!')
     self.loop_for_messages()
 
+  def get_user_from_prefix(self, prefix):
+      domain =prefix.split('!')[0]
+      if domain.endswith('.tmi.twitch.tv'):
+          return domain.replace('.tmi.twitch.tv', '')
+      if 'tmi.twitch.tv' not in domain:
+          return domain
+      return None
+
+
+  def parse_message(self, received_msg):
+      parts = received_msg.split(' ')
+
+      prefix = None
+      user = None
+      channel = None
+      text = None
+      text_command = None
+      text_args = None
+      irc_command = None
+      irc_args = None
+
+      if parts[0].startswith(':'):
+            prefix = parts[0][1:]
+            user = self.get_user_from_prefix(prefix)
+            parts = parts[1:]
+
+            message = Message(
+                prefix=prefix,
+                user=user,
+                channel=channel,
+                text=text,
+                text_command=text_command,
+                text_args=text_args,
+                irc_command=irc_command,
+                irc_args=irc_args,
+        )
+            return message
 
   def handle_message(self, received_msg):
+    message = self.parse_message(received_msg)
     print(f'> {received_msg}')
 
   def loop_for_messages(self):
@@ -44,6 +88,33 @@ class Bot:
       for received_msg in received_msgs.split('\r\n'):
         self.handle_message(received_msg)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# bot communication
 
 def main():
     bot = Bot()
