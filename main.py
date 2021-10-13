@@ -5,7 +5,6 @@ import config
 
 
 
-
 # the bot identifying itself
 
 class Bot:
@@ -21,9 +20,9 @@ class Bot:
 
   def send_command(self, command):
     if 'PASS' not in command:
-      print(f'<{command}')
+      print(f'< {command}')
     self.irc.send((command + '\r\n').encode())
-  
+
 
   def connect(self):
     self.irc = socket.socket()
@@ -35,4 +34,21 @@ class Bot:
       self.send_privmsg(channel, 'I AM HERE!')
     self.loop_for_messages()
 
-  def loop_for_messages
+
+  def handle_message(self, received_msg):
+    print(f'> {received_msg}')
+
+  def loop_for_messages(self):
+    while True:
+      received_msgs = self.irc.recv(2048).decode()
+      for received_msg in received_msgs.split('\r\n'):
+        self.handle_message(received_msg)
+
+
+def main():
+    bot = Bot()
+    bot.connect()
+
+
+if __name__ == '__main__':
+    main()
