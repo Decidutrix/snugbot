@@ -1,2 +1,0 @@
-language = "python3"
-run = 'bash -c echo creating migrations && python manage.py makemigrations && echo running migrations && python manage.py migrate && echo running server && python manage.py runserver 0.0.0.0:8000'
